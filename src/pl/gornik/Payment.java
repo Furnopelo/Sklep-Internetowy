@@ -40,7 +40,6 @@ public class Payment {
         System.out.println("Data transakcji: " + localTime);
     }
 
-
     public String getCode(String text, int number) {
         String code;
         boolean isDigit;
@@ -52,7 +51,9 @@ public class Payment {
             code = scanner.next();
 
             for (int i = 0; i < code.length(); i++) {
-                if (!Character.isDigit(code.charAt(i))); isDigit = false; break;
+                if (!Character.isDigit(code.charAt(i))) ;
+                isDigit = false;
+                break;
             }
         } while (code.length() != number || isDigit);
 

@@ -1,6 +1,7 @@
 package pl.gornik;
 
 import pl.gornik.enums.OrderStatus;
+import pl.gornik.products.Product;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -2,6 +2,7 @@ package pl.gornik;
 
 import pl.gornik.enums.OrderStatus;
 import pl.gornik.enums.PaymentType;
+import pl.gornik.products.Product;
 
 import java.util.Scanner;
 
@@ -9,18 +10,36 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        Shop electronic_shop = new Shop();
+        Shop shop = new Shop();
 
-        electronic_shop.addProductToShop(new Product("Klawiatura mechaniczna", 250, 50));
-        electronic_shop.addProductToShop(new Product("Słuchawki bezprzewodowe", 320, 30));
-        electronic_shop.addProductToShop(new Product("Smartwatch", 500, 20));
-        electronic_shop.addProductToShop(new Product("Mysz gamingowa", 180, 40));
-        electronic_shop.addProductToShop(new Product("Monitor 27 cali", 1200, 15));
-        electronic_shop.addProductToShop(new Product("Powerbank 20 000 mAh", 150, 60));
-        electronic_shop.addProductToShop(new Product("Głośnik Bluetooth", 220, 25));
-        electronic_shop.addProductToShop(new Product("Dysk SSD 1TB", 430, 35));
-        electronic_shop.addProductToShop(new Product("Drukarka laserowa", 700, 10));
-        electronic_shop.addProductToShop(new Product("Kabel USB-C 2m", 30, 100));
+        shop.addNewProduct("Klawiatura mechaniczna", 250, 50, "electronic", "2 lata");
+        shop.addNewProduct("Słuchawki bezprzewodowe", 320, 30, "electronic", "1 rok");
+        shop.addNewProduct("Smartwatch", 500, 20, "electronic", "3 lata");
+        shop.addNewProduct("Mysz gamingowa", 180, 40, "electronic", "1 rok");
+        shop.addNewProduct("Monitor 27 cali", 1200, 15, "electronic", "2 lata");
+        shop.addNewProduct("Powerbank 20 000 mAh", 150, 60, "electronic", "1 rok");
+        shop.addNewProduct("Głośnik Bluetooth", 220, 25, "electronic", "1 rok");
+        shop.addNewProduct("Dysk SSD 1TB", 430, 35, "electronic", "2 lata");
+        shop.addNewProduct("Drukarka laserowa", 700, 10, "electronic", "1 rok");
+        shop.addNewProduct("Kabel USB-C 2m", 30, 100, "electronic", "1 rok");
+
+        shop.addNewProduct("Władca Pierścieni", 50, 20, "book", "J.R.R. Tolkien");
+        shop.addNewProduct("Harry Potter i Kamień Filozoficzny", 40, 30, "book", "J.K. Rowling");
+        shop.addNewProduct("1984", 35, 25, "book", "George Orwell");
+        shop.addNewProduct("Zbrodnia i kara", 45, 15, "book", "Fiodor Dostojewski");
+        shop.addNewProduct("Mistrz i Małgorzata", 55, 10, "book", "Michaił Bułhakow");
+
+        shop.addNewProduct("Koszulka bawełniana", 80, 50, "clothing", "M");
+        shop.addNewProduct("Spodnie dżinsowe", 120, 40, "clothing", "L");
+        shop.addNewProduct("Kurtka zimowa", 300, 20, "clothing", "XL");
+        shop.addNewProduct("Buty sportowe", 200, 30, "clothing", "42");
+        shop.addNewProduct("Czapka z daszkiem", 50, 60, "clothing", "One Size");
+
+        shop.addNewProduct("Chleb razowy", 5, 100, "food", "2023-12-01");
+        shop.addNewProduct("Mleko 3,2%", 3, 80, "food", "2023-11-15");
+        shop.addNewProduct("Jogurt naturalny", 2, 120, "food", "2023-11-20");
+        shop.addNewProduct("Ser żółty", 10, 50, "food", "2023-12-10");
+        shop.addNewProduct("Pomarańcze", 8, 70, "food", "2023-11-25");
 
         System.out.println("--- REJESTRACJA DO SKLEPU ---");
         System.out.print("Podaj imię: ");
@@ -33,7 +52,7 @@ public class Main {
         Client client = new Client(name, surname, email);
 
         System.out.println("\n --- SKLEP INTERNETOWY ---");
-        electronic_shop.showcaseShopProducts();
+        shop.showcaseShopProducts();
 
         System.out.println(" ");
         System.out.print("Podaj czynność (wpisz 'pomoc' po listę): ");
@@ -49,7 +68,7 @@ public class Main {
                 System.out.println("Zapłać - Przechodzi do płatności za zakupy");
                 System.out.println("Zamówienia - Wyświetla wszystkie aktywne zamówienia");
                 System.out.println();
-                System.out.println("KOMENDY ADMINISTRATORA");
+                System.out.println("CZYNNOŚCI ADMINISTRATORA");
                 System.out.println("Dodaj produkt (nazwa produktu) (cena) (ilość [opcjonalne]) - Dodaje nowy produkt do sklepu");
                 System.out.println("Usuń produkt (nazwa produktu) - Usuwa produkt ze sklepu");
             }
@@ -63,7 +82,7 @@ public class Main {
 
                     System.out.println();
 
-                    electronic_shop.addNewProduct(productName, price, quantity);
+                    shop.addNewProduct(productName, price, quantity, "electronic", "1 rok");
                 } catch (Exception e) {
                     System.out.println("Niepoprawny format! Użyj: Dodaj produkt (nazwa [bez spacji]) (cena) (ilość opcjonalnie)");
                 }
@@ -72,7 +91,7 @@ public class Main {
             else if (option.toLowerCase().startsWith("usuń produkt ") || option.toLowerCase().startsWith("usun produkt ")) {
                 System.out.println();
                 String productName = option.substring(13).trim();
-                electronic_shop.removeProductFromShop(productName);
+                shop.removeProductFromShop(productName);
             }
 
             else if (option.toLowerCase().startsWith("dodaj ") || option.toLowerCase().startsWith("usuń ") || option.toLowerCase().startsWith("usun ")) {
@@ -81,7 +100,7 @@ public class Main {
                 int commandLength = isAdding ? 6 : 5;
 
                 String productName = option.substring(commandLength).trim();
-                Product foundProduct = electronic_shop.findProductByName(productName);
+                Product foundProduct = shop.findProductByName(productName);
 
                 System.out.println(" ");
 
@@ -102,7 +121,7 @@ public class Main {
 
             else if (option.equalsIgnoreCase("produkty")) {
                 System.out.println(" ");
-                electronic_shop.showcaseShopProducts();
+                shop.showcaseShopProducts();
             }
 
             else if (option.equalsIgnoreCase("koszyk")) {
@@ -146,7 +165,7 @@ public class Main {
                         order.setStatus(OrderStatus.NEW);
                         System.out.println("Zamówienie zostało utworzone.");
 
-                        electronic_shop.updateStockAfterPurchase(client.getCart());
+                        shop.updateStockAfterPurchase(client.getCart());
 
                         client.getCart().clear();
                     }

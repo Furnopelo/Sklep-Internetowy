@@ -1,5 +1,7 @@
 package pl.gornik;
 
+import pl.gornik.products.Product;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,20 +1,41 @@
 package pl.gornik;
 
+import pl.gornik.products.BookProduct;
+import pl.gornik.products.ElectronicProduct;
+import pl.gornik.products.Product;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Shop {
-    private List<Product> products = new ArrayList<>();
+    private final List<Product> products = new ArrayList<>();
 
-    public void addNewProduct(String name, double price, int quantity) {
+    public void addNewProduct(String name, double price, int quantity, String type, String additionalInfo) {
         if (findProductByName(name) != null) {
             System.out.println("Produkt o tej nazwie już istnieje!");
             return;
         }
 
-        Product newProduct = new Product(name, price, quantity);
+        Product newProduct;
+        switch (type.toLowerCase()) {
+            case "electronic":
+                newProduct = new ElectronicProduct(name, price, quantity, additionalInfo);
+                break;
+            case "book":
+                newProduct = new BookProduct(name, price, quantity, additionalInfo);
+                break;
+            case "clothing":
+                newProduct = new pl.gornik.ClothingProduct(name, price, quantity, additionalInfo);
+                break;
+            case "food":
+                newProduct = new pl.gornik.FoodProduct(name, price, quantity, additionalInfo);
+                break;
+            default:
+                System.out.println("Nieznany typ produktu.");
+                return;
+        }
+
         addProductToShop(newProduct);
-        System.out.println("Produkt dodany pomyślnie: " + name);
     }
 
     public void addProductToShop(Product product) {
@@ -49,11 +70,59 @@ public class Shop {
 
     public void showcaseShopProducts() {
         System.out.println("Dostępne produkty: ");
-        System.out.println("NAZWA | KOSZT | DOSTĘPNA ILOŚĆ");
+        System.out.println("NAZWA | KOSZT | DODATKOWE INFORMACJE | DOSTĘPNA ILOŚĆ");
+
+        List<Product> electronicProducts = new ArrayList<>();
+        List<Product> bookProducts = new ArrayList<>();
+        List<Product> clothingProducts = new ArrayList<>();
+        List<Product> foodProducts = new ArrayList<>();
 
         for (Product product : products) {
-            product.showcaseProduct();
-            System.out.print(" | " + product.getQuantity() + "\n");
+            if (product instanceof ElectronicProduct) {
+                electronicProducts.add(product);
+            } else if (product instanceof BookProduct) {
+                bookProducts.add(product);
+            } else if (product instanceof pl.gornik.ClothingProduct) {
+                clothingProducts.add(product);
+            } else if (product instanceof pl.gornik.FoodProduct) {
+                foodProducts.add(product);
+            }
+        }
+
+        if (!electronicProducts.isEmpty()) {
+            System.out.println("\n--- ELEKTRONIKA");
+            for (Product product : electronicProducts) {
+                product.showcaseProduct();
+                System.out.print(" | " + product.getQuantity() + "\n");
+            }
+        }
+
+        if (!bookProducts.isEmpty()) {
+            System.out.println("\n--- KSIĄŻKI");
+            for (Product product : bookProducts) {
+                product.showcaseProduct();
+                System.out.print(" | " + product.getQuantity() + "\n");
+            }
+        }
+
+        if (!clothingProducts.isEmpty()) {
+            System.out.println("\n--- ODZIEŻ");
+            for (Product product : clothingProducts) {
+                product.showcaseProduct();
+                System.out.print(" | " + product.getQuantity() + "\n");
+            }
+        }
+
+        if (!foodProducts.isEmpty()) {
+            System.out.println("\n--- ŻYWNOŚĆ");
+            for (Product product : foodProducts) {
+                product.showcaseProduct();
+                System.out.print(" | " + product.getQuantity() + "\n");
+            }
+        }
+
+        if (electronicProducts.isEmpty() && bookProducts.isEmpty() && clothingProducts.isEmpty() && foodProducts.isEmpty()) {
+            System.out.println("Brak dostępnych produktów.");
         }
     }
 }
