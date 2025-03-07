@@ -5,8 +5,16 @@ public class Product {
     private double price;
     private int quantity;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public double getPrice() {
+        return price;
     }
 
     public int getQuantity() {
@@ -14,8 +22,9 @@ public class Product {
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantity = Math.max(quantity, 0);
     }
+
 
     public void showcaseProduct() {
         int forcedNameLength = 35 - name.length();
@@ -30,6 +39,7 @@ public class Product {
             System.out.print(" ");
         }
     }
+
 
     public Product(String name, double price, int quantity) {
         this.name = name;

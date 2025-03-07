@@ -1,46 +1,45 @@
 package pl.gornik;
 
+import pl.gornik.enums.PaymentType;
+
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Payment {
     Scanner scanner = new Scanner(System.in);
 
-    private double price;
-    private PaymentType paymentType;
+    public void processPayment(double amount, PaymentType paymentType) {
+        LocalDateTime localTime = LocalDateTime.now();
 
-    public void processCashPayment(double amount) {
-        double value = 0;
+        switch (paymentType) {
+            case CASH -> {
+                double value;
+                do {
+                    System.out.print("Wpisz kwotę: ");
+                    value = scanner.nextDouble();
+                    if (value < amount) System.out.println("To za mało. Spróbuj ponownie.");
+                } while (value < amount);
 
-        while (value < amount) {
-            System.out.print("Wpisz kwotę: ");
-            value = scanner.nextDouble();
-            if (value < amount) System.out.println("To za mało. Spróbuj ponownie");
+                System.out.println("Zapłacono gotówką: " + amount);
+                if (value > amount) System.out.println("Reszta: " + (value - amount));
+            }
+            case BLIK -> {
+                String blikCode = getCode("kod BLIK", 6);
+                System.out.println("Płacę BLIKiem...");
+                System.out.println();
+                System.out.println("Pobrano kwotę: " + amount);
+            }
+            case CARD -> {
+                String pinCode = getCode("PIN karty", 4);
+                System.out.println("Płacę kartą...");
+                System.out.println();
+                System.out.println("Pobrano kwotę: " + amount);
+            }
         }
-        LocalDateTime localTime = LocalDateTime.now();
 
-        System.out.println("Zapłacono gotówką " + amount);
-        if (value > amount) System.out.println("Reszta: " + (value - amount));
-        System.out.println(localTime);
+        System.out.println("Data transakcji: " + localTime);
     }
 
-    public void processBLIKPayment(double amount) {
-        LocalDateTime localTime = LocalDateTime.now();
-
-        String blikCode = getCode("kod BLIK", 6);
-        System.out.println("Płacę BLIKiem...");
-        System.out.println("Pobrano kwotę: " + amount);
-        System.out.println(localTime);
-    }
-
-    public void processCardPayment(double amount) {
-        LocalDateTime localTime = LocalDateTime.now();
-
-        String pinCode = getCode("PIN karty", 4);
-        System.out.println("Płacę kartą...");
-        System.out.println("Pobrano kwotę: " + amount);
-        System.out.println(localTime);
-    }
 
     public String getCode(String text, int number) {
         String code;
