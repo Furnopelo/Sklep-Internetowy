@@ -58,7 +58,7 @@ public class Main {
         System.out.print("Podaj czynność (wpisz 'pomoc' po listę): ");
         String option = scanner.nextLine();
 
-        while (!option.equalsIgnoreCase("wyjscie")) {
+        while (!option.equalsIgnoreCase("wyjscie") || !option.equalsIgnoreCase("wyjście")) {
             if (option.equalsIgnoreCase("pomoc")) {
                 System.out.println("\n --- POMOC ---");
                 System.out.println("Dodaj (nazwa produktu) - Dodaje wpisany produkt do koszyka");
@@ -67,6 +67,7 @@ public class Main {
                 System.out.println("Koszyk - Wyświetla koszyk");
                 System.out.println("Zapłać - Przechodzi do płatności za zakupy");
                 System.out.println("Zamówienia - Wyświetla wszystkie aktywne zamówienia");
+                System.out.println("Wyjście - Wyjście ze sklepu");
                 System.out.println();
                 System.out.println("CZYNNOŚCI ADMINISTRATORA");
                 System.out.println("Dodaj produkt (nazwa produktu) (cena) (ilość [opcjonalne]) - Dodaje nowy produkt do sklepu");
@@ -75,16 +76,57 @@ public class Main {
 
             else if (option.toLowerCase().startsWith("dodaj produkt ")) {
                 try {
-                    String[] parts = option.substring(14).split(" ");
-                    String productName = parts[0];
-                    double price = Double.parseDouble(parts[1]);
-                    int quantity = (parts.length > 2) ? Integer.parseInt(parts[2]) : 1;
+                    System.out.println("Wybierz typ produktu:");
+                    System.out.println("1 - Elektronika");
+                    System.out.println("2 - Książka");
+                    System.out.println("3 - Odzież");
+                    System.out.println("4 - Żywność");
+                    System.out.print("Twój wybór: ");
+                    String productTypeChoice = scanner.nextLine();
 
+                    String type;
+                    String additionalInfo = "";
+
+                    switch (productTypeChoice) {
+                        case "1":
+                            type = "electronic";
+                            System.out.print("Podaj okres gwarancji (np. 2 lata): ");
+                            additionalInfo = scanner.nextLine();
+                            break;
+                        case "2":
+                            type = "book";
+                            System.out.print("Podaj autora książki: ");
+                            additionalInfo = scanner.nextLine();
+                            break;
+                        case "3":
+                            type = "clothing";
+                            System.out.print("Podaj rozmiar (np. M, L, XL): ");
+                            additionalInfo = scanner.nextLine();
+                            break;
+                        case "4":
+                            type = "food";
+                            System.out.print("Podaj datę ważności (np. 2023-12-01): ");
+                            additionalInfo = scanner.nextLine();
+                            break;
+                        default:
+                            System.out.println("Nieprawidłowy wybór typu produktu.");
+                            continue;
+                    }
+
+                    System.out.print("Podaj nazwę produktu: ");
+                    String productName = scanner.nextLine();
+                    System.out.print("Podaj cenę produktu: ");
+                    double price = Double.parseDouble(scanner.nextLine());
+                    System.out.print("Podaj ilość produktu (opcjonalnie, domyślnie 1): ");
+                    String quantityInput = scanner.nextLine();
+                    int quantity = quantityInput.isEmpty() ? 1 : Integer.parseInt(quantityInput);
+
+                    shop.addNewProduct(productName, price, quantity, type, additionalInfo);
                     System.out.println();
-
-                    shop.addNewProduct(productName, price, quantity, "electronic", "1 rok");
+                    System.out.println("Produkt dodany pomyślnie: " + productName);
                 } catch (Exception e) {
-                    System.out.println("Niepoprawny format! Użyj: Dodaj produkt (nazwa [bez spacji]) (cena) (ilość opcjonalnie)");
+                    System.out.println();
+                    System.out.println("Błąd. Spróbuj ponownie.");
                 }
             }
 
@@ -105,13 +147,13 @@ public class Main {
                 System.out.println(" ");
 
                 if (foundProduct != null) {
-                    if (isAdding || foundProduct.getQuantity() > 0) {
-                        client.addProductToCart(foundProduct);
-                    }
-                    else if (isAdding || foundProduct.getQuantity() == 0) {
-                        System.out.println("Produktu nie ma już w sklepie.");
-                    }
-                    else {
+                    if (isAdding) {
+                        if (foundProduct.getQuantity() > 0) {
+                            client.addProductToCart(foundProduct);
+                        } else {
+                            System.out.println("Produktu nie ma już w sklepie.");
+                        }
+                    } else {
                         client.removeProductFromCart(foundProduct);
                     }
                 } else {
@@ -175,6 +217,11 @@ public class Main {
 
             else if (option.equalsIgnoreCase("zamówienia ") || option.equalsIgnoreCase("zamowienia")) {
                 client.showcaseOrders();
+            }
+
+            else if (option.equalsIgnoreCase("wyjscie") || option.equalsIgnoreCase("wyjście")) {
+                System.out.println("Zapraszamy ponownie!");
+                break;
             }
 
             else System.out.println("Podano niewłaściwą czynność.");

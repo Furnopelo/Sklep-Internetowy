@@ -3,6 +3,7 @@ package pl.gornik;
 import pl.gornik.enums.PaymentType;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Payment {
@@ -10,6 +11,8 @@ public class Payment {
 
     public void processPayment(double amount, PaymentType paymentType) {
         LocalDateTime localTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        String formattedDateTime = localTime.format(formatter);
 
         switch (paymentType) {
             case CASH -> {
@@ -19,6 +22,8 @@ public class Payment {
                     value = scanner.nextDouble();
                     if (value < amount) System.out.println("To za mało. Spróbuj ponownie.");
                 } while (value < amount);
+
+                System.out.println();
 
                 System.out.println("Zapłacono gotówką: " + amount);
                 if (value > amount) System.out.println("Reszta: " + (value - amount));
@@ -37,7 +42,7 @@ public class Payment {
             }
         }
 
-        System.out.println("Data transakcji: " + localTime);
+        System.out.println("Data transakcji: " + formattedDateTime);
     }
 
     public String getCode(String text, int number) {
@@ -51,11 +56,12 @@ public class Payment {
             code = scanner.next();
 
             for (int i = 0; i < code.length(); i++) {
-                if (!Character.isDigit(code.charAt(i))) ;
-                isDigit = false;
-                break;
+                if (!Character.isDigit(code.charAt(i))) {
+                    isDigit = false;
+                    break;
+                }
             }
-        } while (code.length() != number || isDigit);
+        } while (code.length() != number || !isDigit);
 
         return code;
     }

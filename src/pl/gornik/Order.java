@@ -4,6 +4,7 @@ import pl.gornik.enums.OrderStatus;
 import pl.gornik.products.Product;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +32,14 @@ public class Order {
     }
 
     public void displayOrder() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        String formattedOrderDate = orderDate.format(formatter);
+
         System.out.println();
         System.out.println("--- Zamówienie " + orderId + " ---");
         System.out.println("Klient: " + client.getName() + " " + client.getSurname());
         System.out.println("Email: " + client.getEmail());
-        System.out.println("Data zamówienia: " + orderDate);
+        System.out.println("Data zamówienia: " + formattedOrderDate);
         System.out.println("Status: " + status);
         System.out.println("Produkty:");
         for (Product product : products) {
